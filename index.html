@@ -61,15 +61,27 @@
 		<h2>Move History:</h2>
 		<ul id="history"></ul>
 
+		<h2>User Move Counts:</h2>
+		<ul id="userCounts"></ul>
+
+		<h2>Computer Move Counts:</h2>
+		<ul id="computerCounts"></ul>
+
 		<script>
-			var moveHistory = []
+			var userHistory = []
+			var computerHistory = []
 
 			function play(userChoice) {
 				var choices = ['rock', 'paper', 'scissors']
 				var computerChoice = choices[Math.floor(Math.random() * choices.length)]
 
 				var result = ''
-
+				var moveHistory = userHistory.concat(computerHistory)
+				moveHistory.forEach(function (move) {
+					var li = document.createElement('li')
+					li.appendChild(document.createTextNode(move))
+					document.getElementById('history').appendChild(li)
+				})
 				if (userChoice === computerChoice) {
 					result = 'Remíza'
 				} else if ((userChoice === 'rock' && computerChoice === 'scissors') || (userChoice === 'paper' && computerChoice === 'rock') || (userChoice === 'scissors' && computerChoice === 'paper')) {
@@ -78,13 +90,44 @@
 					result = 'You lose! Computer chose ' + computerChoice
 				}
 
-				moveHistory.push(userChoice + ' vs ' + computerChoice)
+				userHistory.push(userChoice)
+				computerHistory.push(computerChoice)
+
 				document.getElementById('result').innerHTML = result
 				document.getElementById('history').innerHTML = ''
 				moveHistory.forEach(function (move) {
 					var li = document.createElement('li')
 					li.appendChild(document.createTextNode(move))
 					document.getElementById('history').appendChild(li)
+				})
+
+				countUserMoves()
+				countComputerMoves()
+			}
+
+			function countUserMoves() {
+				var counts = {}
+				userHistory.forEach(function (move) {
+					counts[move] = (counts[move] || 0) + 1
+				})
+				document.getElementById('userCounts').innerHTML = ''
+				Object.keys(counts).forEach(function (move) {
+					var li = document.createElement('li')
+					li.appendChild(document.createTextNode(move + ': ' + counts[move]))
+					document.getElementById('userCounts').appendChild(li)
+				})
+			}
+
+			function countComputerMoves() {
+				var counts = {}
+				computerHistory.forEach(function (move) {
+					counts[move] = (counts[move] || 0) + 1
+				})
+				document.getElementById('computerCounts').innerHTML = ''
+				Object.keys(counts).forEach(function (move) {
+					var li = document.createElement('li')
+					li.appendChild(document.createTextNode(move + ': ' + counts[move]))
+					document.getElementById('computerCounts').appendChild(li)
 				})
 			}
 		</script>
