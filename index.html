@@ -4,9 +4,26 @@
 		<title>Rock Paper Scissors</title>
 		<style>
 			body {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
 				text-align: center;
 				font-family: Arial, sans-serif;
 				background-color: #f2f2f2;
+			}
+
+			.container {
+				width: 100%;
+				margin: 20px;
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: flex-start;
+			}
+
+			.container > div {
+				width: 45%; /* 45% width for each div  selector > spravi ze je 45% z top containeru*/
 			}
 
 			h1 {
@@ -52,31 +69,59 @@
 		</style>
 	</head>
 	<body>
-		<h1>Rock Paper Scissors</h1>
-		<p>Choose your move:</p>
-		<button onclick="play('rock')">Rock</button>
-		<button onclick="play('paper')">Paper</button>
-		<button onclick="play('scissors')">Scissors</button>
-		<p id="result"></p>
-		<h2>Move History:</h2>
-		<ul id="history"></ul>
+		<div class="container" style="margin: 0 auto;"></div>
+			<div>
+				<h1>Rock Paper Scissors</h1>
+				<p>Choose your move:</p>
+				<button onclick="play('rock')">Rock</button>
+				<button onclick="play('paper')">Paper</button>
+				<button onclick="play('scissors')">Scissors</button>
+				<p id="result"></p>
+			</div>
+		</div>
 
-		<h2>User Move Counts:</h2>
-		<ul id="userCounts"></ul>
+		<div class="container">
+			<div>
+				<h2>Move History:</h2>
+				<ul id="history"></ul>
+			</div>
 
-		<h2>Computer Move Counts:</h2>
-		<ul id="computerCounts"></ul>
+			<div>
+				<h2>User Move Counts:</h2>
+				<ul id="userCounts"></ul>
+				<h2>Computer Move Counts:</h2>
+				<ul id="computerCounts"></ul>
+			</div>
+		</div>
 
 		<script>
 			var userHistory = []
 			var computerHistory = []
 
 			function play(userChoice) {
+
+
+				//Pole v JavaScripte je objekt, ktorý sa používa na ukladanie viacerých hodnôt v jednej premennej. Môžete si to predstaviť ako zoznam alebo zberateľskú kartu, kde môžete ukladať rôzne položky.
+				//Napríklad, predstavte si, že máte zberateľskú kartu pre knihy, ktoré chcete prečítať. Môžete vytvoriť pole v JavaScripte, ktoré bude obsahovať názvy týchto kníh:
+
+				//var booksToRead = ['Harry Potter', 'The Hobbit', 'Lord of the Rings']
+				//console.log(booksToRead[0]); // Vypíše "Hobit"
 				var choices = ['rock', 'paper', 'scissors']
+
+ 				//Math.random() generuje náhodné číslo medzi 0 (vrátane) a 1 (bez).
+				// Toto číslo sa potom vynásobí dĺžkou poľa choices.length, čím dostaneme náhodné číslo v rozsahu od 0 do dĺžky poľa.
+				// Math.floor() zaokrúhli toto číslo nadol na najbližšie celé číslo. To je potrebné, pretože indexy poľa musia byť celé čísla.
+				// Výsledné číslo sa potom použije ako index pre pole choices, čím sa vyberie náhodný prvok z poľa.
 				var computerChoice = choices[Math.floor(Math.random() * choices.length)]
 
 				var result = ''
+
+				// Metóda concat() berie jedno alebo viac polí a vytvára nové pole, ktoré obsahuje všetky prvky pôvodných polí. V tomto prípade sa vytvorí nové pole, ktoré obsahuje všetky prvky z userHistory a computerHistory.
+				// Je dôležité poznamenať, že metóda concat() nezmení pôvodné polia. Namiesto toho vytvorí nové pole. Ak chcete uložiť výsledok, musíte ho priradiť do novej premennej, napríklad:
+
 				var moveHistory = userHistory.concat(computerHistory)
+
+				// Metóda forEach() vykoná zadanú funkciu raz pre každý prvok poľa. V tomto prípade sa pre každý prvok v poli moveHistory vytvorí nový element <li> a pridá sa do zoznamu s id history.
 				moveHistory.forEach(function (move) {
 					var li = document.createElement('li')
 					li.appendChild(document.createTextNode(move))
@@ -84,7 +129,11 @@
 				})
 				if (userChoice === computerChoice) {
 					result = 'Remíza'
-				} else if ((userChoice === 'rock' && computerChoice === 'scissors') || (userChoice === 'paper' && computerChoice === 'rock') || (userChoice === 'scissors' && computerChoice === 'paper')) {
+				}
+				// Ak používateľ vyberie kameň a počítač vyberie nožnice,
+				// alebo ak používateľ vyberie papier a počítač vyberie kameň,
+				// alebo ak používateľ vyberie nožnice a počítač vyberie papier, používateľ vyhrá.
+				else if ((userChoice === 'rock' && computerChoice === 'scissors') || (userChoice === 'paper' && computerChoice === 'rock') || (userChoice === 'scissors' && computerChoice === 'paper')) {
 					result = 'You win! Computer chose ' + computerChoice
 				} else {
 					result = 'You lose! Computer chose ' + computerChoice
@@ -93,10 +142,16 @@
 				userHistory.push(userChoice)
 				computerHistory.push(computerChoice)
 
+				// Výsledok sa zobrazí v prvku s id result.
+				//V JavaScripte, .innerHTML je vlastnosť, ktorá umožňuje čítať alebo meniť HTML obsah (vnútro) HTML elementu.
 				document.getElementById('result').innerHTML = result
 				document.getElementById('history').innerHTML = ''
+
+				// Metóda forEach() vykoná zadanú funkciu raz pre každý prvok poľa. V tomto prípade sa pre každý prvok v poli userHistory vytvorí nový element <li> a pridá sa do zoznamu s id userCounts.
 				moveHistory.forEach(function (move) {
 					var li = document.createElement('li')
+					//document.createTextNode() vytvorí nový textový uzol s daným textom. V tomto prípade sa vytvorí textový uzol s hodnotou move.
+					//appendChild() pridáva nový element do existujúceho elementu. V tomto prípade sa pridá nový element <li> s textovým uzlom move do zoznamu s id history.
 					li.appendChild(document.createTextNode(move))
 					document.getElementById('history').appendChild(li)
 				})
@@ -107,10 +162,16 @@
 
 			function countUserMoves() {
 				var counts = {}
+
+				// Metóda forEach() vykoná zadanú funkciu raz pre každý prvok poľa. V tomto prípade sa pre každý prvok v poli userHistory zvýši počet výskytov v poli counts.
 				userHistory.forEach(function (move) {
+					// V tomto prípade sa zvýši počet výskytov pre každý prvok v poli userHistory.
+					//Ak v objekte counts neexistuje kľúč move, vráti sa hodnota 0. Ak kľúč move existuje, vráti sa jeho hodnota.
 					counts[move] = (counts[move] || 0) + 1
 				})
 				document.getElementById('userCounts').innerHTML = ''
+
+				// Metóda Object.keys() vráti pole obsahujúce kľúče objektu. V tomto prípade sa získa pole kľúčov z objektu counts.
 				Object.keys(counts).forEach(function (move) {
 					var li = document.createElement('li')
 					li.appendChild(document.createTextNode(move + ': ' + counts[move]))
